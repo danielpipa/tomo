@@ -104,3 +104,21 @@ WFS = WFS + 0.01*(numpy.random.normal(0,1,WFS.shape)+1j*numpy.random.normal(0,1,
 #temp = numpy.reshape(WFS[0:WFS_size**2],[WFS_size,WFS_size]);
 #matplotlib.pyplot.imshow(temp.real)     #Show a WFS
 
+def matvec(x):
+    return Tomo_func.HH(x, sizes, alt_p, WFS_angles, 0)
+
+def rmatvec(x):
+    return Tomo_func.HH(x, sizes, alt_p, WFS_angles, 1)
+
+
+A = scipy.sparse.linalg.LinearOperator( (8405,3890), matvec=matvec, rmatvec=rmatvec);
+
+recon = scipy.sparse.linalg.lsqr(A,WFS);
+
+layerXY_hat = recon[0];
+
+temp = numpy.reshape(layersXY[0:sizes[0]**2],[sizes[0],sizes[0]])
+matplotlib.pyplot.imshow(temp.real)     #Show a layer
+
+temp2 = numpy.reshape(layerXY_hat[0:sizes[0]**2],[sizes[0],sizes[0]])
+matplotlib.pyplot.imshow(temp2.real)     #Show a layer
