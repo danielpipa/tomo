@@ -85,6 +85,10 @@ L2 = chol(Cov_M2_norm); % Cholesky decomposition
 %layersXY = [randn(1,sizes(1)^2)*L1+1i*(randn(1,sizes(1)^2)*L1) randn(1,sizes(2)^2)*L2+1i*(randn(1,sizes(2)^2)*L2)]';     %Two layers with random slopes
 layersXY = [randn(1,sizes(1)^2)*L1 randn(1,sizes(2)^2)*L2]';     %Two layers with random slopes
 
+%Invert Covariances for use in reconstruction
+Cov_M1_norm_ = Cov_M1_norm^-1;
+Cov_M2_norm_ = Cov_M2_norm^-1;
+
 %layersXY = layersXY/sqrt(var(layersXY));  %Set variance to one ##There
 %must be a better way##: Using now Cov_M1_norm
 
@@ -124,54 +128,59 @@ end
 
 %
 
-Cov_M1_norm_ = Cov_M1_norm^-1;
-Cov_M2_norm_ = Cov_M2_norm^-1;
 C_mtx = @(x,sizes) [Cov_M1_norm_*x(1:sizes(1)^2);Cov_M2_norm_*x(sizes(1)^2+1:end)];
 
 % Add some noise
-
 sigma_2 = var(WFS)/50;
 WFS_noisy = WFS + sqrt(sigma_2)*randn(size(WFS));
 
 %%
-%AA = @(x) HHT(HH(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes);
-%AA = @(x) HHT(HH(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*C(x,sizes);
-AA = @(x) HHT(HH(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*C_mtx(x,sizes);
-tic;
-bb = HHT(WFS_noisy,x_shift,y_shift,sizes);
-layersXY_hat1 = pcg(AA,bb,1e-15,1000);
-Time_Mat = toc
+% %MATLAB
+% AA = @(x) HHT(HH(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*C(x,sizes);
+% tic;
+% bb = HHT(WFS_noisy,x_shift,y_shift,sizes);
+% layersXY_hat1 = pcg(AA,bb,1e-15,1000);
+% Time_Mat = toc
 
+%C full Covariance
+AA = @(x) HHTmex(HHmex(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*C_mtx(x,sizes);;
+tic;
+bb = HHTmex(WFS,x_shift,y_shift,sizes);
+layersXY_hat2 = pcg(AA,bb,1e-6,1000);
+Time_C2 = toc;
+
+%C filter Covariance
 AA = @(x) HHTmex(HHmex(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*Cmex(x,sizes);;
 tic;
 bb = HHTmex(WFS,x_shift,y_shift,sizes);
-layersXY_hat = pcg(AA,bb,1e-6,1000); % without cov
-Time_C = toc
+layersXY_hat = pcg(AA,bb,1e-6,1000);
+Time_C = toc;
 
-% 
+% %Matrix
 % HtH = Hmtx'*Hmtx;
 % tic;
 % bb = Hmtx'*WFS;
-% layersXY_hat2 = pcg(HtH,bb,1e-6,1000); % without cov
+% layersXY_hat3 = pcg(HtH,bb,1e-6,1000);
 % Time_Matrix = toc
 
-
-
-
-%mse(layersXY_hat-layersXY_hat2)
 
 
 %%**************************************************
 % COMPARE
 %**************************************************
+%C full Covariance
+Target_hat2 = HH_projection(layersXY_hat2,subap_index,sizes,alt_p,WFS_target);
+Target = HH_projection(layersXY,subap_index,sizes,alt_p,WFS_target);
+Error_Target_Full = mse(Target-Target_hat2)
+Error_layers_Full = mse(layersXY-layersXY_hat2)
+
+%C filter Covariance
 Target_hat = HH_projection(layersXY_hat,subap_index,sizes,alt_p,WFS_target);
 Target = HH_projection(layersXY,subap_index,sizes,alt_p,WFS_target);
+Error_Target_Filter = mse(Target-Target_hat)
+Error_layers_Filter = mse(layersXY-layersXY_hat)
 
-Error_Target = mean(abs(Target-Target_hat).^2)
-
-Error_layers = mean(abs(layersXY-layersXY_hat).^2)
-
-
+%%
 %
 %**************************************************
 % VISUAL COMPARISON
