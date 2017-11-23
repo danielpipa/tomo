@@ -143,14 +143,14 @@ WFS_noisy = WFS + sqrt(sigma_2)*randn(size(WFS));
 % Time_Mat = toc
 
 %C full Covariance
-AA = @(x) HHTmex(HHmex(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*C_mtx(x,sizes);;
+AA = @(x) HHTmex(HHmex(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*C_mtx(x,sizes);
 tic;
 bb = HHTmex(WFS,x_shift,y_shift,sizes);
 layersXY_hat2 = pcg(AA,bb,1e-6,1000);
 Time_C2 = toc;
 
 %C filter Covariance
-AA = @(x) HHTmex(HHmex(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*Cmex(x,sizes);;
+AA = @(x) HHTmex(HHmex(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*Cmex(x,sizes);
 tic;
 bb = HHTmex(WFS,x_shift,y_shift,sizes);
 layersXY_hat = pcg(AA,bb,1e-6,1000);
