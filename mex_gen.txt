@@ -1,0 +1,5 @@
+g++ -dynamiclib HHmex.cpp MxArray.cpp -o HHmex.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
+
+g++ -dynamiclib HHTmex.cpp MxArray.cpp -o HHTmex.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
+
+g++ -dynamiclib Cmex.cpp MxArray.cpp -o Cmex.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
