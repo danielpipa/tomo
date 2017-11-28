@@ -81,5 +81,18 @@ temp((WFS_size+1)/2,(WFS_size+1)/2) = 1;
 A = Cov_M1_norm_*temp(:);
 A = reshape(A,WFS_size,[]);
 
+M = 20; % Kernel order 2*M+1
 center = (WFS_size+1)/2;
-h = A(center-6:center+6,center-6:center+6);
+h = A(center-M:center+M,center-M:center+M);
+
+% Is it separable?
+% h1*h1' has rank 1
+% Check the SVD
+[U,S,V] = svd(h);
+h1 = U(:,1)*S(1,1);
+h2 = V(:,1)';
+mse(h - h1*h2)
+
+% Usage
+figure(1); imagesc(imfilter(temp,h)); % Full kernel, slow
+figure(2); imagesc(imfilter(imfilter(temp,h1),h2)); % Seperate kernel, fast
