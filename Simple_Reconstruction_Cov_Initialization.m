@@ -120,11 +120,11 @@ C_mtx_ = @(x,sizes) [Cov_M1_norm_*x(1:sizes(1)^2);Cov_M2_norm_*x(sizes(1)^2+1:en
 temp = zeros(41^2,1);
 temp((41^2+1)/2) = 1;
 
-[X, Y] = meshgrid(-40:40,-40:40);
+[X, Y] = meshgrid(-sizes(2):sizes(2),-sizes(2):sizes(2));
 Z = sqrt(X.^2 + Y.^2);
 Z = Z.*tel_diam./layer_size + mindist;
-for i = 1:81
-    for j = 1:81
+for i = 1:sizes(2)*2
+    for j = 1:sizes(2)*2
         CovKernel(j,i) = c*(2*pi*Z(j,i)*f0)^(5/6)*besselk(5/6,2*pi*f0*Z(j,i));
     end
 end

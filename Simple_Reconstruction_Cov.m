@@ -57,7 +57,7 @@ bb = Hmtx'*WFS;
 layersXY_hat3 = pcg(HtH,bb,1e-6,1000);
 Time_Matrix = toc;
 
-%Matrix without inverting C
+%Matrix without inverting Cov
 A = Hmtx*Cmtx*Hmtx';
 A = A + sigma_2*eye(size(A));
 b = WFS;
@@ -65,8 +65,8 @@ tic;
 layersXY_hat4 = Cmtx*Hmtx'*pcg(A,b,1e-6,1000);
 Time_Matrix2 = toc;
 
-%Filter without inverting C
-AA = @(x) HHmex(Cparmex(HHTmex(x,x_shift,y_shift,sizes),sizes,CovKernel),x_shift,y_shift,sizes);%Como implemento + sigma_2*eye(size(A));?
+%Filter without inverting Cov
+AA = @(x) HHmex(Cparmex(HHTmex(x,x_shift,y_shift,sizes),sizes,CovKernel),x_shift,y_shift,sizes) + sigma_2*ones(size(WFS));
 bb = WFS;
 tic;
 temp = pcg(AA,bb,1e-6,1000);
@@ -91,22 +91,22 @@ Error_layers_Filter1 = mse(layersXY-layersXY_hat)
 %All full
 Target_hat3 = HH_projection(layersXY_hat3,subap_index,sizes,alt_p,WFS_target);
 Target = HH_projection(layersXY,subap_index,sizes,alt_p,WFS_target);
-Error_Target_Filter3 = mse(Target-Target_hat3)
-Error_layers_Filter3 = mse(layersXY-layersXY_hat3)
+Error_Target_Full = mse(Target-Target_hat3)
+Error_layers_Full = mse(layersXY-layersXY_hat3)
 
 %All full without inverting C
 Target_hat4 = HH_projection(layersXY_hat4,subap_index,sizes,alt_p,WFS_target);
 Target = HH_projection(layersXY,subap_index,sizes,alt_p,WFS_target);
-Error_Target_Filter4 = mse(Target-Target_hat4)
-Error_layers_Filter4 = mse(layersXY-layersXY_hat4)
+Error_Target_NIFull = mse(Target-Target_hat4)
+Error_layers_NIFull = mse(layersXY-layersXY_hat4)
 
 %Filter without inverting C
 Target_hat5 = HH_projection(layersXY_hat5,subap_index,sizes,alt_p,WFS_target);
 Target = HH_projection(layersXY,subap_index,sizes,alt_p,WFS_target);
-Error_Target_Filter5 = mse(Target-Target_hat5)
-Error_layers_Filter5 = mse(layersXY-layersXY_hat5)
+Error_Target_NIFilter = mse(Target-Target_hat5)
+Error_layers_NIFilter = mse(layersXY-layersXY_hat5)
 
-%
+%%
 %
 %**************************************************
 % VISUAL COMPARISON
@@ -140,3 +140,6 @@ Error_layers_Filter5 = mse(layersXY-layersXY_hat5)
 % imagesc(real(reshape(layersXY_hat(sizes(1)^2+1:sizes(1)^2+sizes(2)^2),sizes(2),[])))
 % title('layer 2 rec');
 
+%%
+
+save Simple_Reconstruction_Cov_Results
