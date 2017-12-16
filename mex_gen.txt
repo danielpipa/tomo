@@ -1,3 +1,12 @@
+Installation
+
+Download opencv-3.3.1-ios-framework.zip
+
+cd /Users/danielpipa/opencv2.framework
+mkdir include
+cd include
+ln -s /Users/danielpipa/opencv2.framework/Headers opencv2
+
 g++ -dynamiclib HHmex.cpp MxArray.cpp -o HHmex.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
 
 g++ -dynamiclib HHTmex.cpp MxArray.cpp -o HHTmex.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
