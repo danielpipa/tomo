@@ -110,8 +110,9 @@ end
 Cov_M1_norm_ = Cov_M1_norm^-1;
 Cov_M2_norm_ = Cov_M2_norm^-1;
 
-Cmtx = blkdiag(Cov_M1_norm_,Cov_M2_norm_);
-C_mtx = @(x,sizes) [Cov_M1_norm_*x(1:sizes(1)^2);Cov_M2_norm_*x(sizes(1)^2+1:end)];
+Cmtx_ = blkdiag(Cov_M1_norm_,Cov_M2_norm_);
+Cmtx = blkdiag(Cov_M1_norm,Cov_M2_norm);
+C_mtx_ = @(x,sizes) [Cov_M1_norm_*x(1:sizes(1)^2);Cov_M2_norm_*x(sizes(1)^2+1:end)];
 
 %%
 %layersXY = [randn(1,sizes(1)^2)*L1+1i*(randn(1,sizes(1)^2)*L1) randn(1,sizes(2)^2)*L2+1i*(randn(1,sizes(2)^2)*L2)]';     %Two layers with random slopes
@@ -148,11 +149,11 @@ WFS_noisy = WFS + sqrt(sigma_2)*randn(size(WFS));
 % Time_Mat = toc
 
 %%C full Covariance
-% AA = @(x) HHTmex(HHmex(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*Cmtx*x;
-% tic;
-% bb = HHTmex(WFS,x_shift,y_shift,sizes);
-% layersXY_hat2 = pcg(AA,bb,1e-6,1000);
-% Time_C2 = toc;
+AA = @(x) HHTmex(HHmex(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*Cmtx*x;
+tic;
+bb = HHTmex(WFS,x_shift,y_shift,sizes);
+layersXY_hat2 = pcg(AA,bb,1e-6,1000);
+Time_C2 = toc;
 
 %C filter Covariance
 AA = @(x) HHTmex(HHmex(x,x_shift,y_shift,sizes),x_shift,y_shift,sizes) + sigma_2*Cmex(x,sizes);
@@ -162,34 +163,46 @@ layersXY_hat = pcg(AA,bb,1e-6,1000);
 Time_C = toc;
 
 %Matrix
-HtH = Hmtx'*Hmtx + sigma_2*Cmtx;
+HtH = Hmtx'*Hmtx + sigma_2*Cmtx_;
 tic;
 bb = Hmtx'*WFS;
 layersXY_hat3 = pcg(HtH,bb,1e-6,1000);
 Time_Matrix = toc;
 
+%Matrix without inverting C
+A = Hmtx*Cmtx*Hmtx';
+A = A + sigma_2*eye(size(A));
+b = WFS;
+tic;
+layersXY_hat4 = Cmtx*Hmtx'*pcg(A,b,1e-6,1000);
+Time_Matrix2 = toc;
 
-
-%%**************************************************
+%% **************************************************
 % COMPARE
 %**************************************************
 %C full Covariance
 Target_hat2 = HH_projection(layersXY_hat2,subap_index,sizes,alt_p,WFS_target);
 Target = HH_projection(layersXY,subap_index,sizes,alt_p,WFS_target);
-Error_Target_Full = mse(Target-Target_hat2)
-Error_layers_Full = mse(layersXY-layersXY_hat2)
+Error_Target_Full2 = mse(Target-Target_hat2)
+Error_layers_Full2 = mse(layersXY-layersXY_hat2)
 
 %C filter Covariance
 Target_hat = HH_projection(layersXY_hat,subap_index,sizes,alt_p,WFS_target);
 Target = HH_projection(layersXY,subap_index,sizes,alt_p,WFS_target);
-Error_Target_Filter = mse(Target-Target_hat)
-Error_layers_Filter = mse(layersXY-layersXY_hat)
+Error_Target_Filter1 = mse(Target-Target_hat)
+Error_layers_Filter1 = mse(layersXY-layersXY_hat)
 
 %All full
 Target_hat3 = HH_projection(layersXY_hat3,subap_index,sizes,alt_p,WFS_target);
 Target = HH_projection(layersXY,subap_index,sizes,alt_p,WFS_target);
-Error_Target_Filter = mse(Target-Target_hat3)
-Error_layers_Filter = mse(layersXY-layersXY_hat3)
+Error_Target_Filter3 = mse(Target-Target_hat3)
+Error_layers_Filter3 = mse(layersXY-layersXY_hat3)
+
+%All full without inverting C
+Target_hat4 = HH_projection(layersXY_hat4,subap_index,sizes,alt_p,WFS_target);
+Target = HH_projection(layersXY,subap_index,sizes,alt_p,WFS_target);
+Error_Target_Filter4 = mse(Target-Target_hat4)
+Error_layers_Filter4 = mse(layersXY-layersXY_hat4)
 
 %
 %
