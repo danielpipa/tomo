@@ -6,12 +6,13 @@ clear; close all;
 r0 = 0.2;
 L0 = 50;
 f0 = 1/L0;
-frac = [1 1];   %###This will need to be included on the HH_array, leaving at ones for now####
+%frac = [0.74,0.02,0.02,0.10,0.12];  %-> Tokovinin2006
+frac = [1,1,1,1,1];
 tel_diam = 8.0; %Telescope Diameter (m)
 ang_dist = 30;  %Angular distance between outer guide stars (arcsec)
 WFS_angles = ang_dist*[[sin(0),cos(0)]; [sin(72*pi/180),cos(72*pi/180)]; [sin(144*pi/180),cos(144*pi/180)]; [sin(216*pi/180),cos(216*pi/180)]; [sin(288*pi/180),cos(288*pi/180)]];   %for each WFS, in x,y
 WFS_target = [0,0];
-WFS_size = 41;   %Number of subapertures in diameter (Only odd numbers)
+WFS_size = 31;   %Number of subapertures in diameter (Only odd numbers)
 % subap_mask = [[0, 0, 1, 1, 1, 0, 0]
 %               [0, 1, 1, 1, 1, 1, 0]
 %               [1, 1, 1, 1, 1, 1, 1]
@@ -29,7 +30,7 @@ n_subaps = length(subap_index); %number of valid subapertures
 %**************************************************
 % INITIALIZATION - TURBULENCE DATA
 %**************************************************
-altitudes = [0.,4000.];     %layers altitudes (m)
+altitudes = [0.,1000.,2000.,4000.,8000.];     %layers altitudes (m) -> Tokovinin2006
 layer_size = WFS_size;
 alt_p = altitudes/(tel_diam/layer_size);  %layer altitudes relative to pixel size (pixels)
 shifts = tan(ang_dist*pi/648000)*alt_p;        %maximum shift in each layer
@@ -39,7 +40,7 @@ sizes = extra_p+layer_size;
 
 
 %**************************************************
-% CREATE COVARIANCE MATRIX
+% CREATE COVARIANCE MATRICES
 %**************************************************
 c = (24/5*gamma(6/5))^(5/6)*gamma(11/6)/(2^(5/6)*pi^(8/3))*(r0*f0)^(-5/3);
 
@@ -61,6 +62,8 @@ for i = 1:length(sizes)
     end
 end
 fprintf('\n\n');
+
+
 
 %% **************************************************
 % PRE CALCULATIONS FOR HH
@@ -84,25 +87,26 @@ for i = 1:length(sizes)
     L{i} = chol(Cov_M_norm{i});    % Cholesky decomposition
 end
 
+
 % Full system matrix
 Hmtx = zeros(WFS_size^2*Tn_wfs,sum(sizes.^2));
-fprintf('Creating full system Matrix\nIteration:          ');
+fprintf('Creating full system Matrix\nIteration:            ');
 for i=1:sum(sizes.^2)
-    fprintf('\b\b\b\b\b\b\b\b\b%04d/%04d',i,sum(sizes.^2));
+    fprintf('\b\b\b\b\b\b\b\b\b\b\b%05d/%05d',i,sum(sizes.^2));
     layers = zeros(sum(sizes.^2));
     layers(i) = 1;
-    Hmtx(:,i) = HHmex(layers,x_shift,y_shift,sizes);
+    Hmtx(:,i) = HHmex5(layers,x_shift,y_shift,sizes);
 end
 fprintf('\n\n');
 
 %Invert Covariances for use in reconstruction
+
 for i = 1:length(sizes)
     Cov_M_norm_{i} = Cov_M_norm{i}^-1;
 end
 
 Cmtx_ = blkdiag(Cov_M_norm_{:});
 Cmtx = blkdiag(Cov_M_norm{:});
-
 
 %Create Kernel for Non Inverse Covariance
 temp = zeros(layer_size^2,1);
@@ -118,4 +122,4 @@ for i = 1:sizes(end)*2
 end
 CovKernel = CovKernel./(max(max(CovKernel)));
 
-save Simple_Reconstruction_Cov_InitData
+save Complete_Reconstruction_InitData
