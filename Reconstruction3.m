@@ -145,40 +145,46 @@ Error_layersY_FilterNI = rms(layersY-layersY_hat5);
 %Based on the expected tilt removed WFE -> Eq. 9.11, pag 316 Hardy
 expected_WFE = 0.141*(tel_diam/r0)^(5/3)*500/(2*pi);    %In Nanometers
 d = tel_diam/WFS_size;
-rec_target = WFrecon(TargetX,TargetY,sizes,d,0.005);
+rec_target = WFreconWFS(TargetX,TargetY,sizes,d,0.005);
 scaling_value = expected_WFE/rms(rec_target(:));
 rec_target = rec_target*scaling_value;
 
-rec_layers = WFrecon(layersX,layersY,sizes,d,0.005)*scaling_value;
+[temp1, temp2, temp3] = WFrecon(layersX,layersY,sizes,d,0.005);
+rec_layers = [temp1; temp2; temp3]*scaling_value;
 
 %C full Covariance
-rec_layers_hat = WFrecon(layersX_hat,layersY_hat,sizes,d,0.005)*scaling_value;
+[temp1, temp2, temp3] = WFrecon(layersX_hat,layersY_hat,sizes,d,0.005);
+rec_layers_hat = [temp1; temp2; temp3]*scaling_value;
 WFE_layers_Full = rms(rec_layers(:) - rec_layers_hat(:))
-rec_target_hat = WFrecon(TargetX_hat,TargetY_hat,sizes,d,0.005)*scaling_value;
+rec_target_hat = WFreconWFS(TargetX_hat,TargetY_hat,sizes,d,0.005)*scaling_value;
 WFE_Target_Full = rms(rec_target(:) - rec_target_hat(:))
 
 %C filter Covariance
-rec_layers_hat2 = WFrecon(layersX_hat2,layersY_hat2,sizes,d,0.005)*scaling_value;
+[temp1, temp2, temp3] = WFrecon(layersX_hat2,layersY_hat2,sizes,d,0.005);
+rec_layers_hat2 = [temp1; temp2; temp3]*scaling_value;
 WFE_layers_Filter = rms(rec_layers(:) - rec_layers_hat2(:))
-rec_target_hat2 = WFrecon(TargetX_hat2,TargetY_hat2,sizes,d,0.005)*scaling_value;
+rec_target_hat2 = WFreconWFS(TargetX_hat2,TargetY_hat2,sizes,d,0.005)*scaling_value;
 WFE_Target_Filter = rms(rec_target(:) - rec_target_hat2(:))
 
 %Matrix
-rec_layers_hat3 = WFrecon(layersX_hat3,layersY_hat3,sizes,d,0.005)*scaling_value;
+[temp1, temp2, temp3] = WFrecon(layersX_hat3,layersY_hat3,sizes,d,0.005);
+rec_layers_hat3 = [temp1; temp2; temp3]*scaling_value;
 WFE_layers_Mat = rms(rec_layers(:) - rec_layers_hat3(:))
-rec_target_hat3 = WFrecon(TargetX_hat3,TargetY_hat3,sizes,d,0.005)*scaling_value;
+rec_target_hat3 = WFreconWFS(TargetX_hat3,TargetY_hat3,sizes,d,0.005)*scaling_value;
 WFE_Target_Mat = rms(rec_target(:) - rec_target_hat3(:))
 
 %Matrix without inverting C
-rec_layers_hat4 = WFrecon(layersX_hat4,layersY_hat4,sizes,d,0.005)*scaling_value;
+[temp1, temp2, temp3] = WFrecon(layersX_hat4,layersY_hat4,sizes,d,0.005);
+rec_layers_hat4 = [temp1; temp2; temp3]*scaling_value;
 WFE_layers_MatNI = rms(rec_layers(:) - rec_layers_hat4(:))
-rec_target_hat4 = WFrecon(TargetX_hat4,TargetY_hat4,sizes,d,0.005)*scaling_value;
+rec_target_hat4 = WFreconWFS(TargetX_hat4,TargetY_hat4,sizes,d,0.005)*scaling_value;
 WFE_Target_MatNi = rms(rec_target(:) - rec_target_hat4(:))
 
 %Filter without inverting C
-rec_layers_hat5 = WFrecon(layersX_hat5,layersY_hat5,sizes,d,0.005)*scaling_value;
+[temp1, temp2, temp3] = WFrecon(layersX_hat5,layersY_hat5,sizes,d,0.005);
+rec_layers_hat5 = [temp1; temp2; temp3]*scaling_value;
 WFE_layers_FilterNI = rms(rec_layers(:) - rec_layers_hat5(:))
-rec_target_hat5 = WFrecon(TargetX_hat5,TargetY_hat5,sizes,d,0.005)*scaling_value;
+rec_target_hat5 = WFreconWFS(TargetX_hat5,TargetY_hat5,sizes,d,0.005)*scaling_value;
 WFE_Target_FilterNi = rms(rec_target(:) - rec_target_hat5(:))
 
 
@@ -215,6 +221,22 @@ title('layer 2 original');
 figure;
 imagesc(real(reshape(layersX_hat5(sizes(1)^2+1:sizes(1)^2+sizes(2)^2),sizes(2),[])))
 title('layer 2 rec');
+
+%Target Wavefront
+figure;
+imagesc(reshape(rec_target(1:(sizes(1)+1)^2),sizes(1)+1,[]))
+title('Target WF original');
+figure;
+imagesc(reshape(rec_target_hat5(1:(sizes(1)+1)^2),sizes(1)+1,[]))
+title('Target WF rec');
+
+%layer 1 Wavefront
+figure;
+imagesc(reshape(rec_layers(1:(sizes(1)+1)^2),sizes(1)+1,[]))
+title('layer 1 WF original');
+figure;
+imagesc(reshape(rec_layers_hat5(1:(sizes(1)+1)^2),sizes(1)+1,[]))
+title('layer 1 WF rec');
 
 %%
 
