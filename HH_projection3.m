@@ -1,4 +1,4 @@
-function [ out ] = HH_projection5( layers, x_shift,y_shift,sizes, alt_p, WFS_target )
+function [ out ] = HH_projection3( layers, x_shift,y_shift,sizes, alt_p, WFS_target )
 
 
 Tn_layers = length(sizes);     %Number of layers
@@ -10,6 +10,6 @@ for j = 1:5
     end
 end
 
-out = HHmex5(layers,x_shift,y_shift,sizes);
+out = HHmex3(layers,x_shift,y_shift,sizes);
 
 out = out(1:sizes(1)^2);

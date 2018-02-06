@@ -26,10 +26,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
 	cv::Mat layer1 = layers(Rect(0,sizes_temp,1,sizes.at<double>(1)*sizes.at<double>(1))).clone().reshape(0, sizes.at<double>(1));
     sizes_temp += sizes.at<double>(1)*sizes.at<double>(1);
     cv::Mat layer2 = layers(Rect(0,sizes_temp,1,sizes.at<double>(2)*sizes.at<double>(2))).clone().reshape(0, sizes.at<double>(2));
-    sizes_temp += sizes.at<double>(2)*sizes.at<double>(2);
-    cv::Mat layer3 = layers(Rect(0,sizes_temp,1,sizes.at<double>(3)*sizes.at<double>(3))).clone().reshape(0, sizes.at<double>(3));
-    sizes_temp += sizes.at<double>(3)*sizes.at<double>(3);
-    cv::Mat layer4 = layers(Rect(0,sizes_temp,1,sizes.at<double>(4)*sizes.at<double>(4))).clone().reshape(0, sizes.at<double>(4));
 	
 	double data[13][13] = {{0.000465941243316438,0.000743031610361572,0.00161656632438361,0.00472734218198899,0.0123178362186659,0.0231723083055391,0.0291640100745752,0.0231723073217654,0.0123178363481702,0.00472734142716301,0.00161656686301893,0.000743032344166441,0.000465940416718631},
 		{0.000743032417026835,0.00164706415650957,0.00208658475302679,-0.00673875615654296,-0.0441569275412257,-0.113423306429761,-0.158716986455740,-0.113423305929399,-0.0441569271009932,-0.00673875520154683,0.00208658402466987,0.00164706392149224,0.000743032409467637},
@@ -58,18 +54,11 @@ void mexFunction( int nlhs, mxArray *plhs[],
     cv::Mat layer2f;
 	filter2D(layer2,layer2f,-1,h,cv::Point(-1,-1),0,cv::BORDER_DEFAULT);
     
-    cv::Mat layer3f;
-	filter2D(layer3,layer3f,-1,h,cv::Point(-1,-1),0,cv::BORDER_DEFAULT);
-    
-    cv::Mat layer4f;
-	filter2D(layer4,layer4f,-1,h,cv::Point(-1,-1),0,cv::BORDER_DEFAULT);
 
 	
 	cv::Mat out;
 	hconcat(layer0f.clone().reshape(0,1),layer1f.clone().reshape(0,1),out);
     hconcat(out.clone().reshape(0,1),layer2f.clone().reshape(0,1),out);
-	hconcat(out.clone().reshape(0,1),layer3f.clone().reshape(0,1),out);
-	hconcat(out.clone().reshape(0,1),layer4f.clone().reshape(0,1),out);
 	cv::transpose(out, out);
 	
 	plhs[0] = MxArray(out);

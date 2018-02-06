@@ -1,4 +1,4 @@
-function [  ] = View_images5( layers, WFS, sizes )
+function [  ] = View_images3( layers, WFS, sizes )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -14,13 +14,6 @@ figure
 imagesc(real(reshape(layers(sizes(1)^2+sizes(2)^2+1:sizes(1)^2+sizes(2)^2+sizes(3)^2),sizes(3),[])))
 title('layer 3')
 
-figure
-imagesc(real(reshape(layers(sizes(1)^2+sizes(2)^2+sizes(3)^2+1:sizes(1)^2+sizes(2)^2+sizes(3)^2+sizes(4)^2),sizes(4),[])))
-title('layer 4')
-
-figure
-imagesc(real(reshape(layers(sizes(1)^2+sizes(2)^2+sizes(3)^2+sizes(4)^2+1:sizes(1)^2+sizes(2)^2+sizes(3)^2+sizes(4)^2+sizes(5)^2),sizes(5),[])))
-title('layer 5')
 
 figure
 imagesc(real(reshape(WFS(1:sizes(1)^2),sizes(1),[])))

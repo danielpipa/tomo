@@ -113,51 +113,10 @@ void mexFunction( int nlhs, mxArray *plhs[],
 	shift(temp,WFS41,Point2f(-y_shift.at<double>(4,i),-x_shift.at<double>(4,i)), BORDER_CONSTANT, 0);
     cv::Mat out2 = WFS01 + WFS11 + WFS21 + WFS31 + WFS41;
     
-    // #Layer 3
-    crop = (sizes.at<double>(3)-sizes.at<double>(0))/2;
-    i = 2;  //Layer 3
-	// #WFS 0
-	copyMakeBorder(WFS0, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS01,Point2f(-y_shift.at<double>(0,i),-x_shift.at<double>(0,i)), BORDER_CONSTANT, 0);
-	// #WFS 1
-	copyMakeBorder(WFS1, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS11,Point2f(-y_shift.at<double>(1,i),-x_shift.at<double>(1,i)), BORDER_CONSTANT, 0);
-	// #WFS 2
-	copyMakeBorder(WFS2, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS21,Point2f(-y_shift.at<double>(2,i),-x_shift.at<double>(2,i)), BORDER_CONSTANT, 0);
-	// #WFS 3
-	copyMakeBorder(WFS3, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS31,Point2f(-y_shift.at<double>(3,i),-x_shift.at<double>(3,i)), BORDER_CONSTANT, 0);
-	// #WFS 4
-	copyMakeBorder(WFS4, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS41,Point2f(-y_shift.at<double>(4,i),-x_shift.at<double>(4,i)), BORDER_CONSTANT, 0);
-    cv::Mat out3 = WFS01 + WFS11 + WFS21 + WFS31 + WFS41;
-    
-    // #Layer 4
-    crop = (sizes.at<double>(4)-sizes.at<double>(0))/2;
-    i = 3;  //Layer 4
-	// #WFS 0
-	copyMakeBorder(WFS0, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS01,Point2f(-y_shift.at<double>(0,i),-x_shift.at<double>(0,i)), BORDER_CONSTANT, 0);
-	// #WFS 1
-	copyMakeBorder(WFS1, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS11,Point2f(-y_shift.at<double>(1,i),-x_shift.at<double>(1,i)), BORDER_CONSTANT, 0);
-	// #WFS 2
-	copyMakeBorder(WFS2, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS21,Point2f(-y_shift.at<double>(2,i),-x_shift.at<double>(2,i)), BORDER_CONSTANT, 0);
-	// #WFS 3
-	copyMakeBorder(WFS3, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS31,Point2f(-y_shift.at<double>(3,i),-x_shift.at<double>(3,i)), BORDER_CONSTANT, 0);
-	// #WFS 4
-	copyMakeBorder(WFS4, temp, crop, crop, crop, crop, BORDER_CONSTANT, 0);	//Pad array
-	shift(temp,WFS41,Point2f(-y_shift.at<double>(4,i),-x_shift.at<double>(4,i)), BORDER_CONSTANT, 0);
-    cv::Mat out4 = WFS01 + WFS11 + WFS21 + WFS31 + WFS41;
 	
 	cv::Mat out;
 	hconcat(out0.clone().reshape(0,1),out1.clone().reshape(0,1),out);
     hconcat(out.clone().reshape(0,1),out2.clone().reshape(0,1),out);
-    hconcat(out.clone().reshape(0,1),out3.clone().reshape(0,1),out);
-	hconcat(out.clone().reshape(0,1),out4.clone().reshape(0,1),out);
 	
 	cv::transpose(out, out);
 	

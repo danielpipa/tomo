@@ -60,10 +60,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
 	cv::Mat layer1 = layers(Rect(0,sizes_temp,1,sizes.at<double>(1)*sizes.at<double>(1))).clone().reshape(0, sizes.at<double>(1));
     sizes_temp += sizes.at<double>(1)*sizes.at<double>(1);
     cv::Mat layer2 = layers(Rect(0,sizes_temp,1,sizes.at<double>(2)*sizes.at<double>(2))).clone().reshape(0, sizes.at<double>(2));
-    sizes_temp += sizes.at<double>(2)*sizes.at<double>(2);
-    cv::Mat layer3 = layers(Rect(0,sizes_temp,1,sizes.at<double>(3)*sizes.at<double>(3))).clone().reshape(0, sizes.at<double>(3));
-    sizes_temp += sizes.at<double>(3)*sizes.at<double>(3);
-    cv::Mat layer4 = layers(Rect(0,sizes_temp,1,sizes.at<double>(4)*sizes.at<double>(4))).clone().reshape(0, sizes.at<double>(4));
 	
 	int crop = (sizes.at<double>(1)-sizes.at<double>(0))/2;	
 	
@@ -80,14 +76,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
 	int crop2 = (sizes.at<double>(2)-sizes.at<double>(0))/2;	
     temp1 = temp(Rect(crop2,crop2,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
     out0 += temp1;
-    shift(layer3,temp,Point2f(y_shift.at<double>(i,2),x_shift.at<double>(i,2)), BORDER_CONSTANT, 0);
-	int crop3 = (sizes.at<double>(3)-sizes.at<double>(0))/2;	
-    temp1 = temp(Rect(crop3,crop3,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-    out0 += temp1;
-    shift(layer4,temp,Point2f(y_shift.at<double>(i,3),x_shift.at<double>(i,3)), BORDER_CONSTANT, 0);
-	int crop4 = (sizes.at<double>(4)-sizes.at<double>(0))/2;	
-    temp1 = temp(Rect(crop4,crop4,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-    out0 += temp1;
     
 	
     // #WFS 1
@@ -99,12 +87,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
     shift(layer2,temp,Point2f(y_shift.at<double>(i,1),x_shift.at<double>(i,1)), BORDER_CONSTANT, 0);
     temp1 = temp(Rect(crop2,crop2,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
 	out1 += temp1;
-    shift(layer3,temp,Point2f(y_shift.at<double>(i,2),x_shift.at<double>(i,2)), BORDER_CONSTANT, 0);
-    temp1 = temp(Rect(crop3,crop3,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-	out1 += temp1;
-    shift(layer4,temp,Point2f(y_shift.at<double>(i,3),x_shift.at<double>(i,3)), BORDER_CONSTANT, 0);
-	temp1 = temp(Rect(crop4,crop4,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-	out1 += temp1;
 	
     // #WFS 2
 	i = 2; //WFS 2
@@ -114,12 +96,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
 	out2 += temp1;
     shift(layer2,temp,Point2f(y_shift.at<double>(i,1),x_shift.at<double>(i,1)), BORDER_CONSTANT, 0);
 	temp1 = temp(Rect(crop2,crop2,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-	out2 += temp1;
-    shift(layer3,temp,Point2f(y_shift.at<double>(i,2),x_shift.at<double>(i,2)), BORDER_CONSTANT, 0);
-	temp1 = temp(Rect(crop3,crop3,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-	out2 += temp1;
-    shift(layer4,temp,Point2f(y_shift.at<double>(i,3),x_shift.at<double>(i,3)), BORDER_CONSTANT, 0);
-	temp1 = temp(Rect(crop4,crop4,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
 	out2 += temp1;
 	
     // #WFS 3
@@ -131,12 +107,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
     shift(layer2,temp,Point2f(y_shift.at<double>(i,1),x_shift.at<double>(i,1)), BORDER_CONSTANT, 0);
 	temp1 = temp(Rect(crop2,crop2,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
 	out3 += temp1;
-    shift(layer3,temp,Point2f(y_shift.at<double>(i,2),x_shift.at<double>(i,2)), BORDER_CONSTANT, 0);
-	temp1 = temp(Rect(crop3,crop3,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-	out3 += temp1;
-    shift(layer4,temp,Point2f(y_shift.at<double>(i,3),x_shift.at<double>(i,3)), BORDER_CONSTANT, 0);
-	temp1 = temp(Rect(crop4,crop4,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-	out3 += temp1;
 	
     // #WFS 4
 	i = 4; //WFS 4
@@ -146,12 +116,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
 	out4 += temp1;
     shift(layer2,temp,Point2f(y_shift.at<double>(i,1),x_shift.at<double>(i,1)), BORDER_CONSTANT, 0);
 	temp1 = temp(Rect(crop2,crop2,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-	out4 += temp1;
-    shift(layer3,temp,Point2f(y_shift.at<double>(i,2),x_shift.at<double>(i,2)), BORDER_CONSTANT, 0);
-	temp1 = temp(Rect(crop3,crop3,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
-	out4 += temp1;
-    shift(layer4,temp,Point2f(y_shift.at<double>(i,3),x_shift.at<double>(i,3)), BORDER_CONSTANT, 0);
-	temp1 = temp(Rect(crop4,crop4,sizes.at<double>(0),sizes.at<double>(0)));	//Crop -> Rect(X,Y,Width,Height)
 	out4 += temp1;
 	
 	cv::Mat out;

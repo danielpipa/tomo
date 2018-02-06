@@ -6,13 +6,14 @@ clear; close all;
 r0 = 0.2;
 L0 = 50;
 f0 = 1/L0;
-%frac = [0.74,0.02,0.02,0.10,0.12];  %-> Tokovinin2006
-frac = [1,1,1,1,1];
+lambda = 0.5e-6;
+frac = [0.78,0.10,0.12];  %-> Tokovinin2006
+%frac = [1,1,1];
 tel_diam = 8.0; %Telescope Diameter (m)
 ang_dist = 30;  %Angular distance between outer guide stars (arcsec)
 WFS_angles = ang_dist*[[sin(0),cos(0)]; [sin(72*pi/180),cos(72*pi/180)]; [sin(144*pi/180),cos(144*pi/180)]; [sin(216*pi/180),cos(216*pi/180)]; [sin(288*pi/180),cos(288*pi/180)]];   %for each WFS, in x,y
 WFS_target = [0,0];
-WFS_size = 31;   %Number of subapertures in diameter (Only odd numbers)
+WFS_size = 21;   %Number of subapertures in diameter (Only odd numbers)
 % subap_mask = [[0, 0, 1, 1, 1, 0, 0]
 %               [0, 1, 1, 1, 1, 1, 0]
 %               [1, 1, 1, 1, 1, 1, 1]
@@ -30,7 +31,7 @@ n_subaps = length(subap_index); %number of valid subapertures
 %**************************************************
 % INITIALIZATION - TURBULENCE DATA
 %**************************************************
-altitudes = [0.,1000.,2000.,4000.,8000.];     %layers altitudes (m) -> Tokovinin2006
+altitudes = [0.,4000.,8000.];     %layers altitudes (m) -> Tokovinin2006
 layer_size = WFS_size;
 alt_p = altitudes/(tel_diam/layer_size);  %layer altitudes relative to pixel size (pixels)
 shifts = tan(ang_dist*pi/648000)*alt_p;        %maximum shift in each layer
@@ -83,7 +84,7 @@ end
 %**************************************************
 
 for i = 1:length(sizes)
-    Cov_M_norm{i} = Cov_M{i}/Cov_M{i}(1,1)*frac(i);
+    Cov_M_norm{i} = Cov_M{i}/Cov_M{i}(1,1)*frac(i); %###Verificar se essa e a posicao certa para layer fraction
     L{i} = chol(Cov_M_norm{i});    % Cholesky decomposition
 end
 
@@ -95,7 +96,7 @@ for i=1:sum(sizes.^2)
     fprintf('\b\b\b\b\b\b\b\b\b\b\b%05d/%05d',i,sum(sizes.^2));
     layers = zeros(sum(sizes.^2));
     layers(i) = 1;
-    Hmtx(:,i) = HHmex5(layers,x_shift,y_shift,sizes);
+    Hmtx(:,i) = HHmex3(layers,x_shift,y_shift,sizes);
 end
 fprintf('\n\n');
 
@@ -122,4 +123,4 @@ for i = 1:sizes(end)*2
 end
 CovKernel = CovKernel./(max(max(CovKernel)));
 
-save Complete_Reconstruction_InitData
+save Reconstruction3_InitData
