@@ -12,3 +12,16 @@ g++ -dynamiclib HHmex.cpp MxArray.cpp -o HHmex.mexmaci64 -I /Users/danielpipa/op
 g++ -dynamiclib HHTmex.cpp MxArray.cpp -o HHTmex.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
 
 g++ -dynamiclib Cmex.cpp MxArray.cpp -o Cmex.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
+
+g++ -dynamiclib Cparmex.cpp MxArray.cpp -o Cparmex.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
+
+
+
+
+g++ -dynamiclib HHmex3.cpp MxArray.cpp -o HHmex3.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
+
+g++ -dynamiclib HHTmex3.cpp MxArray.cpp -o HHTmex3.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
+
+g++ -dynamiclib Cmex3.cpp MxArray.cpp -o Cmex3.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
+
+g++ -dynamiclib Cparmex3.cpp MxArray.cpp -o Cparmex3.mexmaci64 -I /Users/danielpipa/opencv2.framework/include -I /Applications/MATLAB_R2017a.app/extern/include/ -L /Users/danielpipa/opencv2.framework/ -lopencv_core -lopencv_imgproc -L /Applications/MATLAB_R2017a.app/bin/maci64/ -lmx -lmex -lmat -std=c++11
