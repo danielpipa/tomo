@@ -79,14 +79,14 @@ fprintf('Elapsed Time = %f\n',Time_Matrix2);
 
 %Filter without inverting Cov
 fprintf('\nReconstructing. Filter without inverting Cov\n');
-AA = @(x) HHmex3(Cparmex3(HHTmex3(x,x_shift,y_shift,sizes),sizes,CovKernel),x_shift,y_shift,sizes) + sigma_2*x;
+AA = @(x) HHmex3(Cparmex3(HHTmex3(x,x_shift,y_shift,sizes),sizes,frac,CovKernel),x_shift,y_shift,sizes) + sigma_2*x;
 tic;
 bb = WFSX;
 temp = pcg(AA,bb,1e-6,1000);
-layersX_hat5 = Cparmex3(HHTmex3(temp,x_shift,y_shift,sizes),sizes,CovKernel);
+layersX_hat5 = Cparmex3(HHTmex3(temp,x_shift,y_shift,sizes),sizes,frac,CovKernel);
 bb = WFSY;
 temp = pcg(AA,bb,1e-6,1000);
-layersY_hat5 = Cparmex3(HHTmex3(temp,x_shift,y_shift,sizes),sizes,CovKernel);
+layersY_hat5 = Cparmex3(HHTmex3(temp,x_shift,y_shift,sizes),sizes,frac,CovKernel);
 Time_Fil2 = toc;
 fprintf('Elapsed Time = %f\n',Time_Fil2);
 
