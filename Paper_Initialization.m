@@ -14,7 +14,7 @@ ang_dist = 30;  %Angular distance between outer guide stars (arcsec)
 WFS_angles = ang_dist*[[sin(0),cos(0)]; [sin(72*pi/180),cos(72*pi/180)]; [sin(144*pi/180),cos(144*pi/180)]; [sin(216*pi/180),cos(216*pi/180)]; [sin(288*pi/180),cos(288*pi/180)]];   %for each WFS, in x,y
 WFS_target = [0,0];
 
-for size_i = 7:10    
+for size_i = 9:10    
 %for size_i = 1:10    
     WFS_size = size_i*6+5;   %Number of subapertures in diameter (Only odd numbers)
     fprintf('###########################################\nBeginning size_i: %d, WFS size: %d\n\n',size_i,WFS_size);
